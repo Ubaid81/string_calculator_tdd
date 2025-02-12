@@ -14,23 +14,28 @@ class StringCalculator {
 
       final parts = numbers.split('\n');
 
-      if (parts.length < 2) {
-        throw FormatException(
-            "Invalid input format: Missing numbers after delimiter");
+      if (parts.length < 2 || parts[1].isEmpty) {
+        throw FormatException("Invalid input: No numbers provided");
       }
 
-      final customDelimiter = parts.first.substring(2);
+      final String customDelimiter = parts.first.substring(2);
       delimiters.add(customDelimiter);
       numberString = parts.sublist(1).join('\n');
     }
 
     // Create a regex pattern by escaping each delimiter and joining them with '|'
-    final regexPattern = delimiters.map(RegExp.escape).join('|');
+    final String regexPattern = delimiters.map(RegExp.escape).join('|');
 
-    final numberList = numberString.split(RegExp(regexPattern)).map(int.parse);
+    final List<String> splitNumbers = numberString.split(RegExp(regexPattern));
+
+    if (splitNumbers.isNotEmpty && splitNumbers.last.isEmpty) {
+      splitNumbers.removeLast(); // Remove only if the last element is empty
+    }
+
+    final Iterable<int> numberList = splitNumbers.map(int.parse);
 
     // Handle negative numbers
-    final negatives = numberList.where((n) => n < 0).toList();
+    final List<int> negatives = numberList.where((n) => n < 0).toList();
     if (negatives.isNotEmpty) {
       throw ArgumentError(
           'Negative numbers not allowed: ${negatives.join(', ')}');

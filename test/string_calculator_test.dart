@@ -56,5 +56,19 @@ void main() {
               e is ArgumentError &&
               e.message == 'Negative numbers not allowed: -2, -4')));
     });
+
+    test('Ignore empty numbers at the end in input', () {
+      expect(calculator.add('1,2,3,'), equals(6));
+      expect(calculator.add('1\n2\n3\n'), equals(6));
+      expect(calculator.add('//;\n1;2;3;'), equals(6));
+    });
+
+    test(
+        'Missing numbers after delimiter or multiple delimiter without number should throw FormatException',
+        () {
+      expect(() => calculator.add('1,,,2,3,'), throwsFormatException);
+      expect(() => calculator.add('1\n\n\n2\n3\n'), throwsFormatException);
+      expect(() => calculator.add('//;\n1;;2;;3;'), throwsFormatException);
+    });
   });
 }
