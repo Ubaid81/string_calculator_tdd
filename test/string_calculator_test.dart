@@ -24,5 +24,29 @@ void main() {
     test('Newline as delimiter should work', () {
       expect(calculator.add('1\n2,3'), equals(6));
     });
+
+    test('Invalid character in numbers should throw FormatException', () {
+      expect(() => calculator.add("1;2'3"), throwsFormatException);
+    });
+
+    test('Custom delimiter should be supported', () {
+      expect(calculator.add('//;\n1;2'), equals(3));
+    });
+
+    test(
+        'Character other than custom delimiter in numbers should throw FormatException',
+        () {
+      expect(() => calculator.add("//;\n1;2'3"), throwsFormatException);
+    });
+
+    test('Missing numbers after custom delimiter should throw FormatException',
+        () {
+      expect(() => calculator.add("//;\n"), throwsFormatException);
+      expect(() => calculator.add("//;"), throwsFormatException);
+    });
+
+    test('Invalid custom delimiter format should throw FormatException', () {
+      expect(() => calculator.add("//;1;2;3/n4"), throwsFormatException);
+    });
   });
 }
