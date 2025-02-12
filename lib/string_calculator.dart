@@ -29,6 +29,13 @@ class StringCalculator {
 
     final numberList = numberString.split(RegExp(regexPattern)).map(int.parse);
 
+    // Handle negative numbers
+    final negatives = numberList.where((n) => n < 0).toList();
+    if (negatives.isNotEmpty) {
+      throw ArgumentError(
+          'Negative numbers not allowed: ${negatives.join(', ')}');
+    }
+
     return numberList.reduce((sum, n) => sum + n);
   }
 }

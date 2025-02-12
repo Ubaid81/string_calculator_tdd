@@ -48,5 +48,13 @@ void main() {
     test('Invalid custom delimiter format should throw FormatException', () {
       expect(() => calculator.add("//;1;2;3/n4"), throwsFormatException);
     });
+
+    test('Negative numbers should throw exception', () {
+      expect(
+          () => calculator.add('1,-2,3,-4'),
+          throwsA(predicate((e) =>
+              e is ArgumentError &&
+              e.message == 'Negative numbers not allowed: -2, -4')));
+    });
   });
 }
